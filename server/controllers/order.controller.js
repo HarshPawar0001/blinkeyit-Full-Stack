@@ -94,7 +94,6 @@ export async function paymentController(request,response){
             line_items : line_items,
             success_url : `${process.env.FRONTEND_URL}/success`,
             cancel_url : `${process.env.FRONTEND_URL}/cancel`
-
         }
 
         const session = await Stripe.checkout.sessions.create(params)
