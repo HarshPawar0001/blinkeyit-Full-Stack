@@ -16,9 +16,16 @@ import addressRouter from './route/address.route.js'
 import orderRouter from './route/order.route.js'
 
 const app = express()
+
+// app.use(cors({
+//     credentials : true,
+//     origin : process.env.FRONTEND_URL
+// }))
+const allowedOrigins = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',') : [];
+
 app.use(cors({
     credentials : true,
-    origin : process.env.FRONTEND_URL
+    origin : allowedOrigins // Now, 'origin' receives an array, which CORS expects for multiple origins
 }))
 app.use(express.json())
 app.use(cookieParser())
