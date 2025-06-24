@@ -6,14 +6,14 @@ import mongoose from "mongoose";
 
  export async function CashOnDeliveryOrderController(request,response){
     try {
-        const userId = request.userId // auth middleware 
-        const { list_items, totalAmt, addressId,subTotalAmt } = request.body 
+        const userId = request.userId // auth middleware
+        const { list_items, totalAmt, addressId,subTotalAmt } = request.body
 
         const payload = list_items.map(el => {
             return({
                 userId : userId,
                 orderId : `ORD-${new mongoose.Types.ObjectId()}`,
-                productId : el.productId._id, 
+                productId : el.productId._id,
                 product_details : {
                     name : el.productId.name,
                     image : el.productId.image
@@ -56,8 +56,8 @@ export const pricewithDiscount = (price,dis = 1)=>{
 
 export async function paymentController(request,response){
     try {
-        const userId = request.userId // auth middleware 
-        const { list_items, totalAmt, addressId,subTotalAmt } = request.body 
+        const userId = request.userId // auth middleware
+        const { list_items, totalAmt, addressId,subTotalAmt } = request.body
 
         const user = await UserModel.findById(userId)
 
@@ -72,13 +72,13 @@ export async function paymentController(request,response){
                             productId : item.productId._id
                         }
                     },
-                    unit_amount : pricewithDiscount(item.productId.price,item.productId.discount) * 100   
+                    unit_amount : pricewithDiscount(item.productId.price,item.productId.discount) * 100
                },
                adjustable_quantity : {
                     enabled : true,
                     minimum : 1
                },
-               quantity : item.quantity 
+               quantity : item.quantity
             }
         })
 
@@ -92,8 +92,12 @@ export async function paymentController(request,response){
                 addressId : addressId
             },
             line_items : line_items,
-            success_url : `${process.env.FRONTEND_URL}/success`,
-            cancel_url : `${process.env.FRONTEND_URL}/cancel`
+            // Previous lines (commented out)
+            // success_url : `${process.env.FRONTEND_URL}/success`,
+            // cancel_url : `${process.env.FRONTEND_URL}/cancel`
+            // Updated lines to use MAIN_FRONTEND_URL for Stripe redirects
+            success_url : `${process.env.MAIN_FRONTEND_URL}/success`, // Stripe requires a single, valid URL
+            cancel_url : `${process.env.MAIN_FRONTEND_URL}/cancel`   // Using the new environment variable for the main frontend URL
         }
 
         const session = await Stripe.checkout.sessions.create(params)
@@ -126,7 +130,7 @@ const getOrderProductItems = async({
             const paylod = {
                 userId : userId,
                 orderId : `ORD-${new mongoose.Types.ObjectId()}`,
-                productId : product.metadata.productId, 
+                productId : product.metadata.productId,
                 product_details : {
                     name : product.name,
                     image : product.images
@@ -166,7 +170,7 @@ export async function webhookStripe(request,response){
             paymentId  : session.payment_intent,
             payment_status : session.payment_status,
         })
-    
+
       const order = await OrderModel.insertMany(orderProduct)
 
         console.log(order)
