@@ -1,5 +1,5 @@
 
-````markdown
+
 # Blinkeyit – Blinkit-like E-commerce Platform
 
 ![Project Preview](Thumnails.png?raw=true "Project Preview")
@@ -267,5 +267,5 @@ This project is licensed under the MIT License. See the `LICENSE` file for detai
 * GitHub: [HarshPawar0001](https://github.com/HarshPawar0001)
 * Email: [harsh.pawar.ug23@nsut.ac.in](mailto:harsh.pawar.ug23@nsut.ac.in)
 
-```
+
 
